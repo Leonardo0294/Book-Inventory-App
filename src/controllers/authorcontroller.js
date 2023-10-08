@@ -1,4 +1,7 @@
 import Author from "../models/author.js";
+import path from "path";
+
+// Controlador para mostrar la lista de autores
 
 // Controlador para agregar un nuevo autor
 export const createAuthor = async (req, res) => {
@@ -9,7 +12,7 @@ export const createAuthor = async (req, res) => {
     res.status(201).json(newAuthor);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error al agregar el autor" });
+    res.status(500).json({ error: "Error adding the author" });
   }
 };
 
@@ -20,7 +23,7 @@ export const getAuthors = async (req, res) => {
     res.status(200).json(authors);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error al obtener los autores" });
+    res.status(500).json({ error: "Error getting the authors" });
   }
 };
 
@@ -29,12 +32,12 @@ export const getAuthor = async (req, res) => {
   try {
     const author = await Author.findById(req.params.id);
     if (!author) {
-      return res.status(404).json({ error: "Autor no encontrado" });
+      return res.status(404).json({ error: "Author not found" });
     }
     res.status(200).json(author);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error al obtener el autor" });
+    res.status(500).json({ error: "Error getting the author" });
   }
 };
 
@@ -48,12 +51,12 @@ export const updateAuthor = async (req, res) => {
       { new: true }
     );
     if (!updatedAuthor) {
-      return res.status(404).json({ error: "Autor no encontrado" });
+      return res.status(404).json({ error: "Author not found" });
     }
     res.status(200).json(updatedAuthor);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error al actualizar el autor" });
+    res.status(500).json({ error: "Error updating the author" });
   }
 };
 
@@ -62,11 +65,11 @@ export const deleteAuthor = async (req, res) => {
   try {
     const deletedAuthor = await Author.findByIdAndRemove(req.params.id);
     if (!deletedAuthor) {
-      return res.status(404).json({ error: "Autor no encontrado" });
+      return res.status(404).json({ error: "Author not found" });
     }
-    res.status(200).json({ message: "Autor eliminado exitosamente" });
+    res.status(200).json({ message: "Author deleted successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error al eliminar el autor" });
+    res.status(500).json({ error: "Error deleting the author" });
   }
 };

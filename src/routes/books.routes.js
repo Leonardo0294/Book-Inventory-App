@@ -1,27 +1,29 @@
 import express from "express";
+import {Router} from "express";
 import {
   createBook,
   getBooks,
   getBook,
   updateBook,
   deleteBook,
-} from "../controllers/bookcontroler.js";
+  
+} from "../controllers/bookController.js";
+import upload from "../uploads/multer.js"; 
 
 const router = express.Router();
+// Ruta para agregar un nuevo libro (POST) con Multer
+router.post("/", upload.single("coverImage"), createBook);
 
-// Ruta para agregar un nuevo libro
-router.post("/", createBook);
-
-// Ruta para obtener todos los libros
+// Ruta para obtener todos los libros (GET)
 router.get("/", getBooks);
 
-// Ruta para obtener un libro por ID
+// Ruta para obtener un libro por ID (GET)
 router.get("/:id", getBook);
 
-// Ruta para actualizar un libro por ID
-router.put("/:id", updateBook);
+// Ruta para actualizar un libro por ID (PUT)
+router.put("/:id", upload.single("coverImage"), updateBook);
 
-// Ruta para eliminar un libro por ID
+// Ruta para eliminar un libro por ID (DELETE)
 router.delete("/:id", deleteBook);
 
 export default router;

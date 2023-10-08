@@ -1,10 +1,20 @@
 import Book from "../models/books.js";
+import path from "path";
+
+// Controlador para mostrar la lista de libros
 
 // Controlador para agregar un nuevo libro
 export const createBook = async (req, res) => {
   try {
     const { title, genre, year, authorId } = req.body;
-    const coverImage = req.files.coverImage.name; // Obtener el nombre de la imagen
+
+    // Verifica si se cargó una imagen
+    if (!req.file) {
+      return res.status(400).json({ error: "Debes cargar una imagen" });
+    }
+
+    const coverImage = req.file.filename;
+
     const newBook = new Book({
       title,
       genre,
@@ -12,11 +22,13 @@ export const createBook = async (req, res) => {
       author: authorId,
       coverImage,
     });
+
     await newBook.save();
-    res.status(201).json(newBook);
+
+    res.redirect("/books"); // Redirige a la vista de libros
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error al agregar el libro" });
+    res.status(500).json({ error: "Error adding the book" });
   }
 };
 
@@ -27,7 +39,7 @@ export const getBooks = async (req, res) => {
     res.status(200).json(books);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error al obtener los libros" });
+    res.status(500).json({ error: "Error getting the books" });
   }
 };
 
@@ -36,12 +48,12 @@ export const getBook = async (req, res) => {
   try {
     const book = await Book.findById(req.params.id);
     if (!book) {
-      return res.status(404).json({ error: "Libro no encontrado" });
+      return res.status(404).json({ error: "Book not found" });
     }
     res.status(200).json(book);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error al obtener el libro" });
+    res.status(500).json({ error: "Error getting the book" });
   }
 };
 
@@ -49,19 +61,28 @@ export const getBook = async (req, res) => {
 export const updateBook = async (req, res) => {
   try {
     const { title, genre, year, authorId } = req.body;
-    const coverImage = req.files.coverImage.name; // Obtener el nombre de la imagen
+
+    // Verifica si se cargó una imagen
+    if (!req.file) {
+      return res.status(400).json({ error: "Debes cargar una imagen" });
+    }
+
+    const coverImage = req.file.filename;
+
     const updatedBook = await Book.findByIdAndUpdate(
       req.params.id,
       { title, genre, year, author: authorId, coverImage },
       { new: true }
     );
+
     if (!updatedBook) {
-      return res.status(404).json({ error: "Libro no encontrado" });
+      return res.status(404).json({ error: "Book not found" });
     }
+
     res.status(200).json(updatedBook);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error al actualizar el libro" });
+    res.status(500).json({ error: "Error updating the book" });
   }
 };
 
@@ -70,11 +91,11 @@ export const deleteBook = async (req, res) => {
   try {
     const deletedBook = await Book.findByIdAndRemove(req.params.id);
     if (!deletedBook) {
-      return res.status(404).json({ error: "Libro no encontrado" });
+      return res.status(404).json({ error: "Book not found" });
     }
-    res.status(200).json({ message: "Libro eliminado exitosamente" });
+    res.status(200).json({ message: "Book deleted successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error al eliminar el libro" });
+    res.status(500).json({ error: "Error deleting the book" });
   }
 };

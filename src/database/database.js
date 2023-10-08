@@ -1,20 +1,14 @@
-import mongoose from "mongoose";
+import { connect, set } from "mongoose";
 
-// CONEXION A BASE DE DATOS 
-const connectDB = async () => {
+// CONEXION A BASE DE DATOS
+export const dbConection = async () => {
   try {
-    const uri = "mongodb://localhost:27017/modelado"; 
-    await mongoose.connect(uri, {
-      /* useNewUrlParser: true,
-      useUnifiedTopology: true,
-      
-     
-      useCreateIndexes: true, */
-    });
-    console.log("Conexión a MongoDB establecida");
+    set("strictQuery", true);
+    await connect("mongodb://127.0.0.1:27017/modelado");
+    console.log("database conection succsessfully");
   } catch (error) {
-    console.error("Error al conectar a MongoDB:", error);
+    console.log("error conecting to database", error);
   }
 };
 
-export default connectDB;
+export default dbConection;

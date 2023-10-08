@@ -1,17 +1,23 @@
 import mongoose from "mongoose";
 
-const authorSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: true,
+const authorSchema = new mongoose.Schema(
+  {
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
+    biography: String,
   },
-  lastName: {
-    type: String,
-    required: true,
-  },
-  biography: String,
-});
+  {
+    timestamps: true, 
+    versionKey: false, 
+  }
+);
 
-const Author = mongoose.model("Author", authorSchema);
+const author = mongoose.model("Author", authorSchema);
 
-export default Author;
+export default author;
