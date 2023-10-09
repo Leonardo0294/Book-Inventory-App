@@ -8,9 +8,10 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import cors from "cors";
 import connectDB from "./src/database/database.js";
-import upload from "./src/uploads/multer.js"; // Importa la configuración de Multer
 import authorsRouter from "./src/routes/author.routes.js";
 import booksRouter from "./src/routes/books.routes.js";
+import multer from "multer"; 
+import Book from "./src/models/books.js";
 
 dotenv.config({ path: ".env" });
 
@@ -44,31 +45,22 @@ app.use(express.static(path.join(process.cwd(), "public")));
 app.use("/api/", authorsRouter); // Rutas de autores bajo /api/authors
 app.use("/api/", booksRouter); // Rutas de libros bajo /api/books
 
+// Configura Multer para manejar la carga de imágenes
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "/uploads"); 
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
 // Middleware para cargar imágenes con Multer
-app.use(fileUpload());
+app.use(upload.single("coverImage"));
 
-// Ruta para cargar una imagen (ejemplo)
-app.post("/upload", upload.single("coverImage"), (req, res) => {
-  // Accede al archivo cargado desde req.files.coverImage
-  if (!req.files || !req.files.coverImage) {
-    return res.status(400).json({ error: "No se ha cargado ninguna imagen." });
-  }
-
-  // Puedes realizar acciones adicionales aquí, como guardar la imagen en la base de datos
-  // o moverla a una ubicación específica en tu servidor
-
-  res.status(200).json({ message: "Imagen cargada exitosamente." });
-});
-
-/* // Ruta para renderizar la vista de autores
-app.get("/authors", (req, res) => {
-  res.render("authors");
-});
-
-// Ruta para renderizar la vista de libros
-app.get("/books", (req, res) => {
-  res.render("books");
-}); */
+// Resto del código de tu aplicación...
 
 // Inicia el servidor
 const PORT = process.env.PORT || 3000;

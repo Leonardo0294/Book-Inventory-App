@@ -20,10 +20,11 @@ const bookSchema = new mongoose.Schema(
       required: true,
     },
     coverImage: String,
+    
   },
   {
-    timestamps: true, 
-    versionKey: false, 
+    timestamps: true,
+    versionKey: false,
   }
 );
 
